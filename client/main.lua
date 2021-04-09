@@ -281,7 +281,7 @@ function RunRoute(Route)
 			AddTextComponentString("~INPUT_DETONATE~ Deuren openen")
 			DisplayHelpTextFromStringLabel(0, 0, 1, -1)
 			stop('hidden')
-			while (IsControlPressed(0,  JobsClientCore.Keys['G']) ~= true) and (Dooropent ~= true) and CheckDistance(location) do
+			while (IsControlPressed(0, 47) ~= true) and (Dooropent ~= true) and CheckDistance(location) do
 				Citizen.Wait(7)
 			end
 			Citizen.Wait(1000)
@@ -383,7 +383,7 @@ function RunRoute(Route)
 				SetTextComponentFormat('STRING')
 				AddTextComponentString("~INPUT_DETONATE~ Close doors")
 				DisplayHelpTextFromStringLabel(0, 0, 1, -1)
-				while (IsControlPressed(0,  JobsClientCore.Keys['G']) ~= true) and (Dooropent) and CheckDistance(location) do
+				while (IsControlPressed(0, 47) ~= true) and (Dooropent) and CheckDistance(location) do
 					Citizen.Wait(7)
 				end
 				--SetVehicleHandbrake(Bus, false)
@@ -510,7 +510,7 @@ end
 
 RegisterNetEvent('JobsCoreO:UserPressedKey')
 AddEventHandler('JobsCoreO:UserPressedKey', function(KeyId, KeyName)
-	if(KeyId == JobsClientCore.Keys['G']) then
+	if(KeyId == 47) then
 		if (Bus ~= nil) then
 			if(GetVehiclePedIsIn(PlayerPedId(), true) == Bus) then
 				Dooropent = not Dooropent
@@ -529,7 +529,7 @@ AddEventHandler('JobsCoreO:UserPressedKey', function(KeyId, KeyName)
 			end
 		end
 	end
-	if(KeyId == JobsClientCore.Keys['B']) then
+	if(KeyId == 29) then
 		if (Bus ~= nil) then
 			if(GetVehiclePedIsIn(PlayerPedId(), true) == Bus) then
 				local PedsInBus = GetPedsInBus()
