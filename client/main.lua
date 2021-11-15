@@ -275,7 +275,7 @@ CreateThread(function()
         inRange = false
         if LocalPlayer.state.isLoggedIn then
             local Player = QBCore.Functions.GetPlayerData()
-            if Player.job.name == "unemployed" then
+            if Player.job.name == "bus" then
                 local ped = PlayerPedId()
                 local pos = GetEntityCoords(ped)
 
