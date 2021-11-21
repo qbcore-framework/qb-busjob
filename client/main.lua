@@ -144,7 +144,6 @@ function BusGarage()
     for veh, v in pairs(Config.AllowedVehicles) do
         vehicleMenu[#vehicleMenu+1] = {
             header = v.label,
-            txt = "",
             params = {
                 event = "qb-busjob:client:TakeVehicle",
                 args = {
@@ -155,7 +154,6 @@ function BusGarage()
     end
     vehicleMenu[#vehicleMenu+1] = {
         header = "⬅ Close Menu",
-        txt = "",
         params = {
             event = "qb-menu:client:closeMenu"
         }
