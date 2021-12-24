@@ -5,6 +5,7 @@ local lastLocation = nil
 local route = 1
 local max = 0
 
+
 for k,v in pairs(Config.NPCLocations.Locations) do
     max = max + 1
 end
@@ -23,6 +24,9 @@ local NpcData = {
     CountDown = 180
 }
 
+local BusData = {
+    Active = false,
+}
 -- Functions
 
 local function ResetNpcTask()
@@ -163,6 +167,10 @@ end
 
 RegisterNetEvent("qb-busjob:client:TakeVehicle", function(data)
     local coords = Config.Location
+    if(BusData.Active) then
+        QBCore.Functions.Notify('You can only have one active bus at a time', 'error')
+        return
+    else
     QBCore.Functions.SpawnVehicle(data.model, function(veh)
         SetVehicleNumberPlateText(veh, "BUS"..tostring(math.random(1000, 9999)))
         exports['LegacyFuel']:SetFuel(veh, 100.0)
@@ -173,6 +181,7 @@ RegisterNetEvent("qb-busjob:client:TakeVehicle", function(data)
     end, coords, true)
     Wait(1000)
     TriggerEvent('qb-busjob:client:DoBusNpc')
+    end
 end)
 
 function closeMenuFull()
@@ -291,6 +300,7 @@ CreateThread(function()
                             if IsControlJustReleased(0, 38) then
                                 if (not NpcData.Active or NpcData.Active and NpcData.NpcTaken == false)then
                                     if IsPedInAnyVehicle(PlayerPedId(), false) then
+                                        BusData.Active = false;
                                         DeleteVehicle(GetVehiclePedIsIn(PlayerPedId()))
                                         RemoveBlip(NpcData.NpcBlip)
                                     end
