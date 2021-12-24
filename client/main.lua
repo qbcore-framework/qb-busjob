@@ -289,16 +289,15 @@ CreateThread(function()
                             
                             DrawText3D(Config.Location.x, Config.Location.y, Config.Location.z + 0.3, '[E] Stop Working')
                             if IsControlJustReleased(0, 38) then
-                                if not NpcData.Active then
+                                if (not NpcData.Active or NpcData.Active and NpcData.NpcTaken == false)then
                                     if IsPedInAnyVehicle(PlayerPedId(), false) then
                                         DeleteVehicle(GetVehiclePedIsIn(PlayerPedId()))
+                                        RemoveBlip(NpcData.NpcBlip)
                                     end
                                 else
                                     QBCore.Functions.Notify("Drop off the passengers before you stop working", "error")
                                 end
                             end
-                            
-                           
                         else
                             DrawText3D(Config.Location.x, Config.Location.y, Config.Location.z + 0.3, '[E] Job Vehicles')
                             if IsControlJustReleased(0, 38) then
