@@ -105,7 +105,7 @@ local function GetDeliveryLocation()
             if dist < 20 then
                 DrawMarker(2, Config.NPCLocations.Locations[route].x, Config.NPCLocations.Locations[route].y, Config.NPCLocations.Locations[route].z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3, 0.3, 0.3, 255, 255, 255, 255, 0, 0, 0, 1, 0, 0, 0)
                 if dist < 5 then
-                    DrawText3D(Config.NPCLocations.Locations[route].x, Config.NPCLocations.Locations[route].y, Config.NPCLocations.Locations[route].z, '[E] Bus Stop')
+                    DrawText3D(Config.NPCLocations.Locations[route].x, Config.NPCLocations.Locations[route].y, Config.NPCLocations.Locations[route].z, Lang:t("info.bus_stop"))
                     if IsControlJustPressed(0, 38) then
                         local veh = GetVehiclePedIsIn(ped, 0)
                         TaskLeaveVehicle(NpcData.Npc, veh, 0)
@@ -113,7 +113,7 @@ local function GetDeliveryLocation()
                         SetEntityAsNoLongerNeeded(NpcData.Npc)
                         local targetCoords = Config.NPCLocations.Locations[NpcData.LastNpc]
                         TaskGoStraightToCoord(NpcData.Npc, targetCoords.x, targetCoords.y, targetCoords.z, 1.0, -1, 0.0, 0.0)
-                        QBCore.Functions.Notify('Person Was Dropped Off', 'success')
+                        QBCore.Functions.Notify(Lang:t("success.person_dropped"), 'success')
                         if NpcData.DeliveryBlip ~= nil then
                             RemoveBlip(NpcData.DeliveryBlip)
                         end
@@ -141,7 +141,7 @@ end
 function BusGarage()
     local vehicleMenu = {
         {
-            header = "Bus Vehicles",
+            header = Lang:t("info.bus_vehicles"),
             isMenuHeader = true
         }
     }
@@ -157,7 +157,7 @@ function BusGarage()
         }
     end
     vehicleMenu[#vehicleMenu+1] = {
-        header = "⬅ Close Menu",
+        header = Lang:t("info.close_menu"),
         params = {
             event = "qb-menu:client:closeMenu"
         }
@@ -168,7 +168,7 @@ end
 RegisterNetEvent("qb-busjob:client:TakeVehicle", function(data)
     local coords = Config.Location
     if(BusData.Active) then
-        QBCore.Functions.Notify('You can only have one active bus at a time', 'error')
+        QBCore.Functions.Notify(Lang:t("error.one_bus_only"), 'error')
         return
     else
     QBCore.Functions.SpawnVehicle(data.model, function(veh)
@@ -205,7 +205,7 @@ RegisterNetEvent('qb-busjob:client:DoBusNpc', function()
             if NpcData.NpcBlip ~= nil then
                 RemoveBlip(NpcData.NpcBlip)
             end
-            QBCore.Functions.Notify('Goto the bus stop', 'success')
+            QBCore.Functions.Notify(Lang:t("success.goto_bus_stop"), 'success')
             NpcData.NpcBlip = AddBlipForCoord(Config.NPCLocations.Locations[route].x, Config.NPCLocations.Locations[route].y, Config.NPCLocations.Locations[route].z)
             SetBlipColour(NpcData.NpcBlip, 3)
             SetBlipRoute(NpcData.NpcBlip, true)
@@ -224,7 +224,7 @@ RegisterNetEvent('qb-busjob:client:DoBusNpc', function()
                         DrawMarker(2, Config.NPCLocations.Locations[route].x, Config.NPCLocations.Locations[route].y, Config.NPCLocations.Locations[route].z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3, 0.3, 0.3, 255, 255, 255, 255, 0, 0, 0, 1, 0, 0, 0)
 
                         if dist < 5 then
-                            DrawText3D(Config.NPCLocations.Locations[route].x, Config.NPCLocations.Locations[route].y, Config.NPCLocations.Locations[route].z, '[E] Bus Stop')
+                            DrawText3D(Config.NPCLocations.Locations[route].x, Config.NPCLocations.Locations[route].y, Config.NPCLocations.Locations[route].z, Lang:t("info.bus_stop"))
                             if IsControlJustPressed(0, 38) then
                                 local veh = GetVehiclePedIsIn(ped, 0)
                                 local maxSeats, freeSeat = GetVehicleMaxNumberOfPassengers(veh)
@@ -240,7 +240,7 @@ RegisterNetEvent('qb-busjob:client:DoBusNpc', function()
                                 ClearPedTasksImmediately(NpcData.Npc)
                                 FreezeEntityPosition(NpcData.Npc, false)
                                 TaskEnterVehicle(NpcData.Npc, veh, -1, freeSeat, 1.0, 0)
-                                QBCore.Functions.Notify('Goto the bus stop', "success")
+                                QBCore.Functions.Notify(Lang:t("success.goto_bus_stop"), "success")
                                 if NpcData.NpcBlip ~= nil then
                                     RemoveBlip(NpcData.NpcBlip)
                                 end
@@ -255,10 +255,10 @@ RegisterNetEvent('qb-busjob:client:DoBusNpc', function()
                 end
             end)
         else
-           QBCore.Functions.Notify('You Are Already Driving Bus')
+           QBCore.Functions.Notify(Lang:t("error.already_driving_bus"))
         end
     else
-        QBCore.Functions.Notify('You Are Not In A Bus')
+        QBCore.Functions.Notify(Lang:t("error.not_in_bus"))
     end
 end)
 
@@ -273,7 +273,7 @@ CreateThread(function()
     SetBlipAsShortRange(BusBlip, true)
     SetBlipColour(BusBlip, 49)
     BeginTextCommandSetBlipName("STRING")
-    AddTextComponentSubstringPlayerName("Bus Depot")
+    AddTextComponentSubstringPlayerName(Lang:t("info.bus_depot"))
     EndTextCommandSetBlipName(BusBlip)
 end)
 
@@ -296,7 +296,7 @@ CreateThread(function()
                     if vehDist < 1.5 then
                         if whitelistedVehicle() then
                             
-                            DrawText3D(Config.Location.x, Config.Location.y, Config.Location.z + 0.3, '[E] Stop Working')
+                            DrawText3D(Config.Location.x, Config.Location.y, Config.Location.z + 0.3, Lang:t("info.stop_working"))
                             if IsControlJustReleased(0, 38) then
                                 if (not NpcData.Active or NpcData.Active and NpcData.NpcTaken == false)then
                                     if IsPedInAnyVehicle(PlayerPedId(), false) then
@@ -305,11 +305,11 @@ CreateThread(function()
                                         RemoveBlip(NpcData.NpcBlip)
                                     end
                                 else
-                                    QBCore.Functions.Notify("Drop off the passengers before you stop working", "error")
+                                    QBCore.Functions.Notify(Lang:t("error.drop_off_passenger"), "error")
                                 end
                             end
                         else
-                            DrawText3D(Config.Location.x, Config.Location.y, Config.Location.z + 0.3, '[E] Job Vehicles')
+                            DrawText3D(Config.Location.x, Config.Location.y, Config.Location.z + 0.3, Lang:t("info.job_vehicles"))
                             if IsControlJustReleased(0, 38) then
                                 BusGarage()
                             end
