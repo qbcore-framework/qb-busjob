@@ -1,7 +1,7 @@
 Config = Config or {}
 
 Config.AllowedVehicles = {
-   [1] = {model = "bus", label = "Standard Bus"},
+    [1] = {model = "bus", label = Lang:t('info.bus')},
 }
 
 Config.Location = vector4(462.22, -641.15, 28.45, 175.0)
