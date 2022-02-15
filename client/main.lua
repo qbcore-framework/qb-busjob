@@ -4,6 +4,8 @@ local QBCore = exports['qb-core']:GetCoreObject()
 local lastLocation = nil
 local route = 1
 local max = 0
+local playerJob = nil
+local busBlip = nil
 
 for k,v in pairs(Config.NPCLocations.Locations) do
     max = max + 1
@@ -27,6 +29,27 @@ local BusData = {
     Active = false,
 }
 -- Functions
+
+function DeleteBlip()
+	if DoesBlipExist(BusBlip) then
+		RemoveBlip(BusBlip)
+	end
+end
+
+local function setupClient()
+    if playerJob.name == "bus" then
+		
+		BusBlip = AddBlipForCoord(Config.Location)
+		SetBlipSprite (BusBlip, 513)
+		SetBlipDisplay(BusBlip, 4)
+		SetBlipScale  (BusBlip, 0.6)
+		SetBlipAsShortRange(BusBlip, true)
+		SetBlipColour(BusBlip, 49)
+		BeginTextCommandSetBlipName("STRING")
+		AddTextComponentSubstringPlayerName(Lang:t('info.bus_depot'))
+		EndTextCommandSetBlipName(BusBlip)
+    end
+end
 
 local function ResetNpcTask()
     NpcData = {
@@ -260,19 +283,27 @@ RegisterNetEvent('qb-busjob:client:DoBusNpc', function()
     end
 end)
 
--- Threads
-
-CreateThread(function()
-    BusBlip = AddBlipForCoord(Config.Location)
-    SetBlipSprite (BusBlip, 513)
-    SetBlipDisplay(BusBlip, 4)
-    SetBlipScale  (BusBlip, 0.6)
-    SetBlipAsShortRange(BusBlip, true)
-    SetBlipColour(BusBlip, 49)
-    BeginTextCommandSetBlipName("STRING")
-    AddTextComponentSubstringPlayerName(Lang:t('info.bus_depot'))
-    EndTextCommandSetBlipName(BusBlip)
+RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
+    playerJob = QBCore.Functions.GetPlayerData().job
+    setupClient() -- Creates the Blips
 end)
+
+RegisterNetEvent('QBCore:Client:OnJobUpdate', function(JobInfo)
+    playerJob = JobInfo
+	DeleteBlip()
+    if playerJob.name == "bus" then
+		setupClient() --Creates the Blips
+    end
+end)
+
+AddEventHandler('onResourceStart', function(resource)
+    if GetCurrentResourceName() == resource then
+        playerJob = QBCore.Functions.GetPlayerData().job
+        setupClient() --Creates the Blips
+    end
+end)
+
+-- Threads
 
 CreateThread(function()
     while true do
