@@ -6,7 +6,7 @@ local Translations = {
         drop_off_passengers = 'Deixa os passageiros antes de parares de trabalhar'
     },
     success = {
-        dropped_off = 'Deixas-te o passageiro',
+        dropped_off = 'Deixaste o passageiro',
     },
     info = {
         bus = 'Autocarro normal',
