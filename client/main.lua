@@ -270,7 +270,7 @@ CreateThread(function()
     local PolyZone = CircleZone:Create(vector3(Config.Location.x, Config.Location.y, Config.Location.z), 5, {
         name="busMain",
         useZ=true,
-        debugPoly=true
+        debugPoly=false
     })
     PolyZone:onPlayerInOut(function(isPointInside)
         local Player = QBCore.Functions.GetPlayerData()
