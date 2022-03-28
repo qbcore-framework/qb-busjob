@@ -291,9 +291,7 @@ end)
 RegisterNetEvent('QBCore:Client:OnJobUpdate', function(JobInfo)
     playerJob = JobInfo
 	DeleteBlip()
-    if playerJob.name == "bus" then
 		setupClient() --Creates the Blips
-    end
 end)
 
 AddEventHandler('onResourceStart', function(resource)
