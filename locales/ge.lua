@@ -1,0 +1,29 @@
+local Translations = {
+    error = {
+        already_driving_bus = 'უკვე ატარებ ავტობუსს',
+        not_in_bus = 'შენ არ იმყოფები ავტობუსში',
+        one_bus_active = 'შეგიძლია გყავდეს მხოლოდ ერთი აქტიური ავტობუსი',
+        drop_off_passengers = 'ჩამოსვი ყველა მგზავრი სანამ დაასრულებ მუშაობას'
+    },
+    success = {
+        dropped_off = 'მგზავრი ჩავიდა',
+    },
+    info = {
+        bus = 'სტანდარტული ავტობუსი',
+        goto_busstop = 'წადი ავტობუსის გაჩერებაზე',
+        busstop_text = '~g~E~s~ ავტობუსის გაჩერება',
+        bus_plate = 'BUS', -- Can be 3 or 4 characters long (uses random 4 digits)
+        bus_depot = 'ავტობუსის სადგური',
+        bus_stop_work = '~g~E~s~ სამუშაოს დასრულება',
+        bus_job_vehicles = '~g~E~s~ სამსახურის ავტომობილები'
+    },
+    menu = {
+        bus_header = 'ავტობუსები',
+        bus_close = '⬅ ნავიგაციის გახურვა'
+    }
+}
+
+Lang = Locale:new({
+    phrases = Translations,
+    warnOnMissing = true
+})

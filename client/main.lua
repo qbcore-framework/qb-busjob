@@ -84,25 +84,6 @@ local function whitelistedVehicle()
     return retval
 end
 
-local function IsDriver()
-    return GetPedInVehicleSeat(GetVehiclePedIsIn(PlayerPedId(), false), -1) == PlayerPedId()
-end
-
-local function DrawText3D(x, y, z, text)
-	SetTextScale(0.35, 0.35)
-    SetTextFont(4)
-    SetTextProportional(1)
-    SetTextColour(255, 255, 255, 215)
-    SetTextEntry("STRING")
-    SetTextCentre(true)
-    AddTextComponentString(text)
-    SetDrawOrigin(x,y,z, 0)
-    DrawText(0.0, 0.0)
-    local factor = (string.len(text)) / 370
-    DrawRect(0.0, 0.0+0.0125, 0.017+ factor, 0.03, 0, 0, 0, 75)
-    ClearDrawOrigin()
-end
-
 local function GetDeliveryLocation()
     if route <= (max - 1) then
         route = route + 1
@@ -118,16 +99,19 @@ local function GetDeliveryLocation()
     SetBlipRoute(NpcData.DeliveryBlip, true)
     SetBlipRouteColour(NpcData.DeliveryBlip, 3)
     NpcData.LastDeliver = route
-
-    CreateThread(function()
-        while true do
-            local ped = PlayerPedId()
-            local pos = GetEntityCoords(ped)
-            local dist = #(pos - vector3(Config.NPCLocations.Locations[route].x, Config.NPCLocations.Locations[route].y, Config.NPCLocations.Locations[route].z))
-            if dist < 20 then
-                DrawMarker(2, Config.NPCLocations.Locations[route].x, Config.NPCLocations.Locations[route].y, Config.NPCLocations.Locations[route].z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3, 0.3, 0.3, 255, 255, 255, 255, 0, 0, 0, 1, 0, 0, 0)
-                if dist < 5 then
-                    DrawText3D(Config.NPCLocations.Locations[route].x, Config.NPCLocations.Locations[route].y, Config.NPCLocations.Locations[route].z, Lang:t('info.busstop_text'))
+    local inRange = false
+    local PolyZone = CircleZone:Create(vector3(Config.NPCLocations.Locations[route].x, Config.NPCLocations.Locations[route].y, Config.NPCLocations.Locations[route].z), 5, {
+        name="busjobdeliver",
+        useZ=true,
+        -- debugPoly=true
+    })
+    PolyZone:onPlayerInOut(function(isPointInside)
+        if isPointInside then
+            inRange = true
+            exports["qb-core"]:DrawText(Lang:t('info.busstop_text'), 'rgb(220, 20, 60)')
+            CreateThread(function()
+                repeat
+                    Wait(0)
                     if IsControlJustPressed(0, 38) then
                         local veh = GetVehiclePedIsIn(ped, 0)
                         TaskLeaveVehicle(NpcData.Npc, veh, 0)
@@ -148,11 +132,14 @@ local function GetDeliveryLocation()
                         ResetNpcTask()
                         route = route + 1
                         TriggerEvent('qb-busjob:client:DoBusNpc')
+                        PolyZone:destroy()
                         break
                     end
-                end
-            end
-            Wait(1)
+                until not inRange
+            end)
+        else
+            exports["qb-core"]:HideText()
+            inRange = false
         end
     end)
 end
@@ -234,19 +221,19 @@ RegisterNetEvent('qb-busjob:client:DoBusNpc', function()
             SetBlipRouteColour(NpcData.NpcBlip, 3)
             NpcData.LastNpc = route
             NpcData.Active = true
-
-            CreateThread(function()
-                while not NpcData.NpcTaken do
-
-                    local ped = PlayerPedId()
-                    local pos = GetEntityCoords(ped)
-                    local dist = #(pos - vector3(Config.NPCLocations.Locations[route].x, Config.NPCLocations.Locations[route].y, Config.NPCLocations.Locations[route].z))
-
-                    if dist < 20 then
-                        DrawMarker(2, Config.NPCLocations.Locations[route].x, Config.NPCLocations.Locations[route].y, Config.NPCLocations.Locations[route].z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3, 0.3, 0.3, 255, 255, 255, 255, 0, 0, 0, 1, 0, 0, 0)
-
-                        if dist < 5 then
-                            DrawText3D(Config.NPCLocations.Locations[route].x, Config.NPCLocations.Locations[route].y, Config.NPCLocations.Locations[route].z, Lang:t('info.busstop_text'))
+            local inRange = false
+            local PolyZone = CircleZone:Create(vector3(Config.NPCLocations.Locations[route].x, Config.NPCLocations.Locations[route].y, Config.NPCLocations.Locations[route].z), 5, {
+                name="busjobdeliver",
+                useZ=true,
+                -- debugPoly=true
+            })
+            PolyZone:onPlayerInOut(function(isPointInside)
+                if isPointInside then
+                    inRange = true
+                    exports["qb-core"]:DrawText(Lang:t('info.busstop_text'), 'rgb(220, 20, 60)')
+                    CreateThread(function()
+                        repeat
+                            Wait(0)
                             if IsControlJustPressed(0, 38) then
                                 local veh = GetVehiclePedIsIn(ped, 0)
                                 local maxSeats, freeSeat = GetVehicleMaxNumberOfPassengers(veh)
@@ -269,10 +256,14 @@ RegisterNetEvent('qb-busjob:client:DoBusNpc', function()
                                 GetDeliveryLocation()
                                 NpcData.NpcTaken = true
                                 TriggerServerEvent('qb-busjob:server:NpcPay', math.random(15, 25))
+                                PolyZone:destroy()
+                                break
                             end
-                        end
-                    end
-                    Wait(1)
+                        until not inRange
+                    end)
+                else
+                    exports["qb-core"]:HideText()
+                    inRange = false
                 end
             end)
         else
@@ -304,48 +295,50 @@ end)
 -- Threads
 
 CreateThread(function()
-    while true do
-        inRange = false
-        if LocalPlayer.state.isLoggedIn then
-            local Player = QBCore.Functions.GetPlayerData()
-            if Player.job.name == "bus" then
-                local ped = PlayerPedId()
-                local pos = GetEntityCoords(ped)
-                local vehDist = #(pos - vector3(Config.Location.x, Config.Location.y, Config.Location.z))
-
-                if vehDist < 30 then
-                    inRange = true
-                    DrawMarker(2, Config.Location.x, Config.Location.y, Config.Location.z, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.3, 0.5, 0.2, 200, 0, 0, 222, false, false, false, true, false, false, false)
-
-                    if vehDist < 1.5 then
-                        if whitelistedVehicle() then
-                            DrawText3D(Config.Location.x, Config.Location.y, Config.Location.z + 0.3, Lang:t('info.bus_stop_work'))
+    local inRange = false
+    local PolyZone = CircleZone:Create(vector3(Config.Location.x, Config.Location.y, Config.Location.z), 5, {
+        name="busMain",
+        useZ=true,
+        debugPoly=false
+    })
+    PolyZone:onPlayerInOut(function(isPointInside)
+        local Player = QBCore.Functions.GetPlayerData()
+        local inVeh = whitelistedVehicle()
+        if Player.job.name == "bus" then
+            if isPointInside then
+                inRange = true
+                CreateThread(function()
+                    repeat
+                        Wait(0)
+                        if not inVeh then
+                            exports["qb-core"]:DrawText(Lang:t('info.busstop_text'), 'left')
                             if IsControlJustReleased(0, 38) then
-                                if (not NpcData.Active or NpcData.Active and NpcData.NpcTaken == false)then
+                                BusGarage()
+                                exports["qb-core"]:HideText()
+                                break
+                            end
+                        else
+                            exports["qb-core"]:DrawText(Lang:t('info.bus_stop_work'), 'left')
+                            if IsControlJustReleased(0, 38) then
+                                if (not NpcData.Active or NpcData.Active and NpcData.NpcTaken == false) then
                                     if IsPedInAnyVehicle(PlayerPedId(), false) then
                                         BusData.Active = false;
                                         DeleteVehicle(GetVehiclePedIsIn(PlayerPedId()))
                                         RemoveBlip(NpcData.NpcBlip)
+                                        exports["qb-core"]:HideText()
+                                        break
                                     end
                                 else
                                     QBCore.Functions.Notify(Lang:t('error.drop_off_passengers'), 'error')
                                 end
                             end
-                        else
-                            DrawText3D(Config.Location.x, Config.Location.y, Config.Location.z + 0.3, Lang:t('info.bus_job_vehicles'))
-                            if IsControlJustReleased(0, 38) then
-                                BusGarage()
-                            end
                         end
-                    end
-                end
+                    until not inRange
+                end)
+            else
+                exports["qb-core"]:HideText()
+                inRange = false
             end
         end
-
-        if not inRange then
-            Wait(3000)
-        end
-
-        Wait(3)
-    end
+    end)
 end)
