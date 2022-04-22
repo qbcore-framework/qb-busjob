@@ -212,29 +212,27 @@ RegisterNetEvent('qb-busjob:client:DoBusNpc', function()
             NpcData.LastNpc = route
             NpcData.Active = true
 
-            CreateThread(function()
-                while not NpcData.NpcTaken do
+            local inRange = false
+            local PolyZone = CircleZone:Create(vector3(Config.NPCLocations.Locations[route].x, Config.NPCLocations.Locations[route].y, Config.NPCLocations.Locations[route].z), 5, {
+                name="busjobdeliver",
+                useZ=true,
+                -- debugPoly=true
+            })
+            PolyZone:onPlayerInOut(function(isPointInside)
+                if isPointInside then
+                    inRange = true
+                    exports["qb-core"]:DrawText(Lang:t('info.busstop_text'), 'rgb(220, 20, 60)')
+                    CreateThread(function()
+                        repeat
+                            Wait(0)
+                            if IsControlJustPressed(0, 38) then
+                                local veh = GetVehiclePedIsIn(ped, 0)
+                                local maxSeats, freeSeat = GetVehicleMaxNumberOfPassengers(veh)
 
-                    local ped = PlayerPedId()
-                    local pos = GetEntityCoords(ped)
-                    local dist = #(pos - vector3(Config.NPCLocations.Locations[route].x, Config.NPCLocations.Locations[route].y, Config.NPCLocations.Locations[route].z))
-
-                    if dist < 20 then
-                        DrawMarker(2, Config.NPCLocations.Locations[route].x, Config.NPCLocations.Locations[route].y, Config.NPCLocations.Locations[route].z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3, 0.3, 0.3, 255, 255, 255, 255, 0, 0, 0, 1, 0, 0, 0)
-                        if whitelistedVehicle() then
-                            if dist < 5 then
-                                DrawText3D(Config.NPCLocations.Locations[route].x, Config.NPCLocations.Locations[route].y, Config.NPCLocations.Locations[route].z, Lang:t('info.busstop_text'))
-                                if IsControlJustPressed(0, 38) then
-                                    local veh = GetVehiclePedIsIn(ped, 0)
-                                    local maxSeats, freeSeat = GetVehicleMaxNumberOfPassengers(veh)
-
-                                    for i=maxSeats - 1, 0, -1 do
-                                        if IsVehicleSeatFree(veh, i) then
-                                            freeSeat = i
-                                            break
-                                        end
-                                    end
-
+                                for i=maxSeats - 1, 0, -1 do
+                                    if IsVehicleSeatFree(veh, i) then
+                                        freeSeat = i
+                                        break
                                     lastLocation = GetEntityCoords(PlayerPedId())
                                     ClearPedTasksImmediately(NpcData.Npc)
                                     FreezeEntityPosition(NpcData.Npc, false)
