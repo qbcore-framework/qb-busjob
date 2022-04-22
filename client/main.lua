@@ -221,31 +221,32 @@ RegisterNetEvent('qb-busjob:client:DoBusNpc', function()
 
                     if dist < 20 then
                         DrawMarker(2, Config.NPCLocations.Locations[route].x, Config.NPCLocations.Locations[route].y, Config.NPCLocations.Locations[route].z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3, 0.3, 0.3, 255, 255, 255, 255, 0, 0, 0, 1, 0, 0, 0)
+                        if whitelistedVehicle() then
+                            if dist < 5 then
+                                DrawText3D(Config.NPCLocations.Locations[route].x, Config.NPCLocations.Locations[route].y, Config.NPCLocations.Locations[route].z, Lang:t('info.busstop_text'))
+                                if IsControlJustPressed(0, 38) then
+                                    local veh = GetVehiclePedIsIn(ped, 0)
+                                    local maxSeats, freeSeat = GetVehicleMaxNumberOfPassengers(veh)
 
-                        if dist < 5 then
-                            DrawText3D(Config.NPCLocations.Locations[route].x, Config.NPCLocations.Locations[route].y, Config.NPCLocations.Locations[route].z, Lang:t('info.busstop_text'))
-                            if IsControlJustPressed(0, 38) then
-                                local veh = GetVehiclePedIsIn(ped, 0)
-                                local maxSeats, freeSeat = GetVehicleMaxNumberOfPassengers(veh)
-
-                                for i=maxSeats - 1, 0, -1 do
-                                    if IsVehicleSeatFree(veh, i) then
-                                        freeSeat = i
-                                        break
+                                    for i=maxSeats - 1, 0, -1 do
+                                        if IsVehicleSeatFree(veh, i) then
+                                            freeSeat = i
+                                            break
+                                        end
                                     end
-                                end
 
-                                lastLocation = GetEntityCoords(PlayerPedId())
-                                ClearPedTasksImmediately(NpcData.Npc)
-                                FreezeEntityPosition(NpcData.Npc, false)
-                                TaskEnterVehicle(NpcData.Npc, veh, -1, freeSeat, 1.0, 0)
-                                QBCore.Functions.Notify(Lang:t('info.goto_busstop'), 'primary')
-                                if NpcData.NpcBlip ~= nil then
-                                    RemoveBlip(NpcData.NpcBlip)
+                                    lastLocation = GetEntityCoords(PlayerPedId())
+                                    ClearPedTasksImmediately(NpcData.Npc)
+                                    FreezeEntityPosition(NpcData.Npc, false)
+                                    TaskEnterVehicle(NpcData.Npc, veh, -1, freeSeat, 1.0, 0)
+                                    QBCore.Functions.Notify(Lang:t('info.goto_busstop'), 'primary')
+                                    if NpcData.NpcBlip ~= nil then
+                                        RemoveBlip(NpcData.NpcBlip)
+                                    end
+                                    GetDeliveryLocation()
+                                    NpcData.NpcTaken = true
+                                    TriggerServerEvent('qb-busjob:server:NpcPay', math.random(15, 25))
                                 end
-                                GetDeliveryLocation()
-                                NpcData.NpcTaken = true
-                                TriggerServerEvent('qb-busjob:server:NpcPay', math.random(15, 25))
                             end
                         end
                     end
@@ -253,6 +254,8 @@ RegisterNetEvent('qb-busjob:client:DoBusNpc', function()
                 end
             end)
         else
+            route = 1
+            NpcData.NpcTaken = false
             QBCore.Functions.Notify(Lang:t('error.already_driving_bus'), 'error')
         end
     else
