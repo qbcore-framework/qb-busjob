@@ -239,6 +239,9 @@ RegisterNetEvent('qb-busjob:client:DoBusNpc', function()
                         until not inRange
                     end)
                 else
+                    route = 1
+                    NpcData.NpcTaken = false
+                    NpcData.Active = false
                     exports["qb-core"]:HideText()
                     inRange = false
                 end
