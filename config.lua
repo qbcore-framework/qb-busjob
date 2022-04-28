@@ -1,10 +1,15 @@
 Config = Config or {}
 
 Config.AllowedVehicles = {
-    [1] = {model = "bus", label = Lang:t('info.bus')},
+    "bus",
 }
 
 Config.Location = vector4(462.22, -641.15, 28.45, 175.0)
+Config.Blip = {
+    sprite = 513,
+    scale = 0.6,
+    color = 43
+}
 
 Config.NPCLocations = {
     Locations = {
