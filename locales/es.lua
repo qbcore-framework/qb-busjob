@@ -6,11 +6,11 @@ local Translations = {
         drop_off_passengers = 'Lleva a tus pasajeros antes de dejar de trabajar'
     },
     success = {
-        dropped_off = 'La persona se bajó',
+        dropped_off = 'Una persona se bajó'
     },
     info = {
         bus = 'Autobús estándar',
-        goto_busstop = 'Ir a parada de autobús',
+        goto_busstop = 'Ir a la siguiente parada de autobús',
         busstop_text = '~g~E~s~ Parada de autobús',
         bus_plate = 'BUS', -- Can be 3 or 4 characters long (uses random 4 digits)
         bus_depot = 'Estación de autobuses',
