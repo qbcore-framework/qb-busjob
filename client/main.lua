@@ -1,13 +1,8 @@
 -- Variables
 
 local QBCore = exports['qb-core']:GetCoreObject()
-local lastLocation = nil
 local route = 1
-local max = 0
-
-for k,v in pairs(Config.NPCLocations.Locations) do
-    max = max + 1
-end
+local max = #Config.NPCLocations.Locations
 
 local NpcData = {
     Active = false,
@@ -90,6 +85,7 @@ local function GetDeliveryLocation()
                 repeat
                     Wait(0)
                     if IsControlJustPressed(0, 38) then
+                        local ped = PlayerPedId()
                         local veh = GetVehiclePedIsIn(ped, 0)
                         TaskLeaveVehicle(NpcData.Npc, veh, 0)
                         SetEntityAsMissionEntity(NpcData.Npc, false, true)
@@ -100,9 +96,9 @@ local function GetDeliveryLocation()
                         if NpcData.DeliveryBlip ~= nil then
                             RemoveBlip(NpcData.DeliveryBlip)
                         end
-                        local RemovePed = function(ped)
+                        local RemovePed = function(pped)
                             SetTimeout(60000, function()
-                                DeletePed(ped)
+                                DeletePed(pped)
                             end)
                         end
                         RemovePed(NpcData.Npc)
@@ -130,7 +126,7 @@ function BusGarage()
             isMenuHeader = true
         }
     }
-    for veh, v in pairs(Config.AllowedVehicles) do
+    for _, v in pairs(Config.AllowedVehicles) do
         vehicleMenu[#vehicleMenu+1] = {
             header = v.label,
             params = {
@@ -212,6 +208,7 @@ RegisterNetEvent('qb-busjob:client:DoBusNpc', function()
                         repeat
                             Wait(0)
                             if IsControlJustPressed(0, 38) then
+                                local ped = PlayerPedId()
                                 local veh = GetVehiclePedIsIn(ped, 0)
                                 local maxSeats, freeSeat = GetVehicleMaxNumberOfPassengers(veh)
 
@@ -222,7 +219,6 @@ RegisterNetEvent('qb-busjob:client:DoBusNpc', function()
                                     end
                                 end
 
-                                lastLocation = GetEntityCoords(PlayerPedId())
                                 ClearPedTasksImmediately(NpcData.Npc)
                                 FreezeEntityPosition(NpcData.Npc, false)
                                 TaskEnterVehicle(NpcData.Npc, veh, -1, freeSeat, 1.0, 0)
@@ -254,7 +250,7 @@ end)
 -- Threads
 
 CreateThread(function()
-    BusBlip = AddBlipForCoord(Config.Location)
+    local BusBlip = AddBlipForCoord(Config.Location)
     SetBlipSprite (BusBlip, 513)
     SetBlipDisplay(BusBlip, 4)
     SetBlipScale  (BusBlip, 0.6)

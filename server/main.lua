@@ -3,7 +3,7 @@ local QBCore = exports['qb-core']:GetCoreObject()
 function NearBus(src)
     local ped = GetPlayerPed(src)
     local coords = GetEntityCoords(ped)
-    for k,v in pairs(Config.NPCLocations.Locations) do
+    for _, v in pairs(Config.NPCLocations.Locations) do
         local dist = #(coords - vector3(v.x,v.y,v.z))
         if dist < 20 then
             return true
