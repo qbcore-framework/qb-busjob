@@ -11,11 +11,11 @@ local Translations = {
     info = {
         bus = 'Autocarro normal',
         goto_busstop = 'Vai para a paragem de autocarro',
-        busstop_text = '~g~E~s~ Paragem de Autocarro',
+        busstop_text = '[E] Paragem de Autocarro',
         bus_plate = 'BUS', -- Can be 3 or 4 characters long (uses random 4 digits)
         bus_depot = 'Central de Autocarros',
-        bus_stop_work = '~g~E~s~ Parar de Trabalhar',
-        bus_job_vehicles = '~g~E~s~ Veículos'
+        bus_stop_work = '[E] Parar de Trabalhar',
+        bus_job_vehicles = '[E] Veículos'
     },
     menu = {
         bus_header = 'Autocarros',

@@ -11,11 +11,11 @@ local Translations = {
     info = {
         bus = 'Standard Bus',
         goto_busstop = 'Go to the bus stop',
-        busstop_text = '~g~E~s~ Bus Stop',
+        busstop_text = '[E] Bus Stop',
         bus_plate = 'BUS', -- Can be 3 or 4 characters long (uses random 4 digits)
         bus_depot = 'Bus Depot',
-        bus_stop_work = '~g~E~s~ Stop Working',
-        bus_job_vehicles = '~g~E~s~ Job Vehicles'
+        bus_stop_work = '[E] Stop Working',
+        bus_job_vehicles = '[E] Job Vehicles'
     },
     menu = {
         bus_header = 'Bus Vehicles',
