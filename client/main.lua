@@ -22,7 +22,7 @@ local BusData = {
 }
 
 -- Functions
-local function ResetNpcTask()
+local function resetNpcTask()
     NpcData = {
         Active = false,
         CurrentNpc = nil,
@@ -101,7 +101,7 @@ local function GetDeliveryLocation()
                             end)
                         end
                         RemovePed(NpcData.Npc)
-                        ResetNpcTask()
+                        resetNpcTask()
                         route = route + 1
                         TriggerEvent('qb-busjob:client:DoBusNpc')
                         PolyZone:destroy()
@@ -290,6 +290,7 @@ CreateThread(function()
                                         DeleteVehicle(GetVehiclePedIsIn(PlayerPedId()))
                                         RemoveBlip(NpcData.NpcBlip)
                                         exports["qb-core"]:HideText()
+                                        resetNpcTask()
                                         break
                                     end
                                 else
