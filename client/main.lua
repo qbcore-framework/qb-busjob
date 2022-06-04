@@ -104,6 +104,7 @@ local function GetDeliveryLocation()
                         resetNpcTask()
                         route = route + 1
                         TriggerEvent('qb-busjob:client:DoBusNpc')
+                        exports["qb-core"]:HideText()
                         PolyZone:destroy()
                         break
                     end
@@ -227,6 +228,7 @@ RegisterNetEvent('qb-busjob:client:DoBusNpc', function()
                                 GetDeliveryLocation()
                                 NpcData.NpcTaken = true
                                 TriggerServerEvent('qb-busjob:server:NpcPay', math.random(15, 25))
+                                exports["qb-core"]:HideText()
                                 PolyZone:destroy()
                                 break
                             end
