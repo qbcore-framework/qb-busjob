@@ -1,5 +1,4 @@
 -- Variables
-
 local QBCore = exports['qb-core']:GetCoreObject()
 local route = 1
 local max = #Config.NPCLocations.Locations
@@ -21,9 +20,9 @@ local NpcData = {
 local BusData = {
     Active = false,
 }
--- Functions
 
-local function ResetNpcTask()
+-- Functions
+local function resetNpcTask()
     NpcData = {
         Active = false,
         CurrentNpc = nil,
@@ -102,9 +101,10 @@ local function GetDeliveryLocation()
                             end)
                         end
                         RemovePed(NpcData.Npc)
-                        ResetNpcTask()
+                        resetNpcTask()
                         route = route + 1
                         TriggerEvent('qb-busjob:client:DoBusNpc')
+                        exports["qb-core"]:HideText()
                         PolyZone:destroy()
                         break
                     end
@@ -117,9 +117,12 @@ local function GetDeliveryLocation()
     end)
 end
 
--- Old Menu Code (being removed)
+local function closeMenuFull()
+    exports['qb-menu']:closeMenu()
+end
 
-function BusGarage()
+-- Old Menu Code (being removed)
+local function busGarage()
     local vehicleMenu = {
         {
             header = Lang:t('menu.bus_header'),
@@ -165,12 +168,8 @@ RegisterNetEvent("qb-busjob:client:TakeVehicle", function(data)
     end
 end)
 
-function closeMenuFull()
-    exports['qb-menu']:closeMenu()
-end
 
 -- Events
-
 RegisterNetEvent('qb-busjob:client:DoBusNpc', function()
     if whitelistedVehicle() then
         if not NpcData.Active then
@@ -229,6 +228,7 @@ RegisterNetEvent('qb-busjob:client:DoBusNpc', function()
                                 GetDeliveryLocation()
                                 NpcData.NpcTaken = true
                                 TriggerServerEvent('qb-busjob:server:NpcPay', math.random(15, 25))
+                                exports["qb-core"]:HideText()
                                 PolyZone:destroy()
                                 break
                             end
@@ -248,7 +248,6 @@ RegisterNetEvent('qb-busjob:client:DoBusNpc', function()
 end)
 
 -- Threads
-
 CreateThread(function()
     local BusBlip = AddBlipForCoord(Config.Location)
     SetBlipSprite (BusBlip, 513)
@@ -280,7 +279,7 @@ CreateThread(function()
                         if not inVeh then
                             exports["qb-core"]:DrawText(Lang:t('info.busstop_text'), 'left')
                             if IsControlJustReleased(0, 38) then
-                                BusGarage()
+                                busGarage()
                                 exports["qb-core"]:HideText()
                                 break
                             end
@@ -293,6 +292,7 @@ CreateThread(function()
                                         DeleteVehicle(GetVehiclePedIsIn(PlayerPedId()))
                                         RemoveBlip(NpcData.NpcBlip)
                                         exports["qb-core"]:HideText()
+                                        resetNpcTask()
                                         break
                                     end
                                 else

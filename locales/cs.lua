@@ -11,11 +11,11 @@ local Translations = {
     info = {
         bus = 'Standartní autobus',
         goto_busstop = 'Jeď na autobusovou zastávku',
-        busstop_text = '~g~E~s~ Autobusová zastávka',
+        busstop_text = '[E] Autobusová zastávka',
         bus_plate = 'BUS', -- Can be 3 or 4 characters long (uses random 4 digits)
         bus_depot = 'Autobusové depo',
-        bus_stop_work = '~g~E~s~ Přestat pracovat',
-        bus_job_vehicles = '~g~E~s~ Firemní vozidla'
+        bus_stop_work = '[E] Přestat pracovat',
+        bus_job_vehicles = '[E] Firemní vozidla'
     },
     menu = {
         bus_header = 'Bus Vehicles', -- IDK

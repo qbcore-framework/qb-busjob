@@ -11,11 +11,11 @@ local Translations = {
     info = {
         bus = 'სტანდარტული ავტობუსი',
         goto_busstop = 'წადი ავტობუსის გაჩერებაზე',
-        busstop_text = '~g~E~s~ ავტობუსის გაჩერება',
+        busstop_text = '[E] ავტობუსის გაჩერება',
         bus_plate = 'BUS', -- Can be 3 or 4 characters long (uses random 4 digits)
         bus_depot = 'ავტობუსის სადგური',
-        bus_stop_work = '~g~E~s~ სამუშაოს დასრულება',
-        bus_job_vehicles = '~g~E~s~ სამსახურის ავტომობილები'
+        bus_stop_work = '[E] სამუშაოს დასრულება',
+        bus_job_vehicles = '[E] სამსახურის ავტომობილები'
     },
     menu = {
         bus_header = 'ავტობუსები',
