@@ -39,15 +39,15 @@ local function resetNpcTask()
 end
 
 local function createBlips()
-    local BusBlip = AddBlipForCoord(Config.Location)
-    SetBlipSprite (BusBlip, 513)
-    SetBlipDisplay(BusBlip, 4)
-    SetBlipScale  (BusBlip, 0.6)
-    SetBlipAsShortRange(BusBlip, true)
-    SetBlipColour(BusBlip, 49)
+    local busBlip = AddBlipForCoord(Config.Location)
+    SetBlipSprite (busBlip, 513)
+    SetBlipDisplay(busBlip, 4)
+    SetBlipScale  (busBlip, 0.6)
+    SetBlipAsShortRange(busBlip, true)
+    SetBlipColour(busBlip, 49)
     BeginTextCommandSetBlipName("STRING")
     AddTextComponentSubstringPlayerName(Lang:t('info.bus_depot'))
-    EndTextCommandSetBlipName(BusBlip)
+    EndTextCommandSetBlipName(busBlip)
 end
 
 local function whitelistedVehicle()
@@ -213,8 +213,6 @@ RegisterNetEvent('QBCore:Client:OnJobUpdate', function(JobInfo)
 
     if PlayerData.job.name == "bus" then
         createBlips()
-    elseif BusBlip then
-        RemoveBlip(BusBlip)
     end
 end)
 
