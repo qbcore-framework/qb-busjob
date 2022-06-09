@@ -3,6 +3,7 @@ local QBCore = exports['qb-core']:GetCoreObject()
 local PlayerData = QBCore.Functions.GetPlayerData()
 local route = 1
 local max = #Config.NPCLocations.Locations
+local busBlip
 
 local NpcData = {
     Active = false,
@@ -39,7 +40,7 @@ local function resetNpcTask()
 end
 
 local function createBlips()
-    local busBlip = AddBlipForCoord(Config.Location)
+    busBlip = AddBlipForCoord(Config.Location)
     SetBlipSprite (busBlip, 513)
     SetBlipDisplay(busBlip, 4)
     SetBlipScale  (busBlip, 0.6)
@@ -204,15 +205,13 @@ RegisterNetEvent('QBCore:Client:OnPlayerUnload', function()
     PlayerData = {}
 end)
 
-RegisterNetEvent('QBCore:Player:SetPlayerData', function(_PlayerData)
-    PlayerData = _PlayerData
-end)
-
 RegisterNetEvent('QBCore:Client:OnJobUpdate', function(JobInfo)
     PlayerData.job = JobInfo
 
     if PlayerData.job.name == "bus" then
         createBlips()
+    elseif busBlip then
+        RemoveBlip(busBlip)
     end
 end)
 
