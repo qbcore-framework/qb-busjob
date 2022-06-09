@@ -3,7 +3,7 @@ local QBCore = exports['qb-core']:GetCoreObject()
 local PlayerData = QBCore.Functions.GetPlayerData()
 local route = 1
 local max = #Config.NPCLocations.Locations
-local busBlip
+local busBlip = nil
 
 local NpcData = {
     Active = false,
@@ -39,17 +39,23 @@ local function resetNpcTask()
     }
 end
 
-local function createBlips()
-    busBlip = AddBlipForCoord(Config.Location)
-    SetBlipSprite (busBlip, 513)
-    SetBlipDisplay(busBlip, 4)
-    SetBlipScale  (busBlip, 0.6)
-    SetBlipAsShortRange(busBlip, true)
-    SetBlipColour(busBlip, 49)
-    BeginTextCommandSetBlipName("STRING")
-    AddTextComponentSubstringPlayerName(Lang:t('info.bus_depot'))
-    EndTextCommandSetBlipName(busBlip)
+local function updateBlip()
+    if PlayerData.job.name == "bus" then
+        busBlip = AddBlipForCoord(Config.Location)
+        SetBlipSprite (busBlip, 513)
+        SetBlipDisplay(busBlip, 4)
+        SetBlipScale  (busBlip, 0.6)
+        SetBlipAsShortRange(busBlip, true)
+        SetBlipColour(busBlip, 49)
+        BeginTextCommandSetBlipName("STRING")
+        AddTextComponentSubstringPlayerName(Lang:t('info.bus_depot'))
+        EndTextCommandSetBlipName(busBlip)
+    elseif busBlip ~= nil then
+        RemoveBlip(busBlip)
+    end
 end
+
+
 
 local function whitelistedVehicle()
     local ped = PlayerPedId()
@@ -187,18 +193,13 @@ end)
 AddEventHandler('onResourceStart', function(resourceName)
     -- handles script restarts
     if GetCurrentResourceName() == resourceName then
-        if PlayerData.job.name == "bus" then
-            createBlips()
-        end
+        updateBlip()
     end
   end)
 
 RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
     PlayerData = QBCore.Functions.GetPlayerData()
-
-    if PlayerData.job.name == "bus" then
-        createBlips()
-    end
+    updateBlip()
 end)
 
 RegisterNetEvent('QBCore:Client:OnPlayerUnload', function()
@@ -207,12 +208,8 @@ end)
 
 RegisterNetEvent('QBCore:Client:OnJobUpdate', function(JobInfo)
     PlayerData.job = JobInfo
+    updateBlip()
 
-    if PlayerData.job.name == "bus" then
-        createBlips()
-    elseif busBlip then
-        RemoveBlip(busBlip)
-    end
 end)
 
 RegisterNetEvent('qb-busjob:client:DoBusNpc', function()
