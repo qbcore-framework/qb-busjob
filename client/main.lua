@@ -75,13 +75,16 @@ local function whitelistedVehicle()
     return retval
 end
 
-local function GetDeliveryLocation()
+local function nextStop()
     if route <= (max - 1) then
         route = route + 1
     else
         route = 1
     end
+end
 
+local function GetDeliveryLocation()
+    nextStop()
     if NpcData.DeliveryBlip ~= nil then
         RemoveBlip(NpcData.DeliveryBlip)
     end
@@ -122,7 +125,7 @@ local function GetDeliveryLocation()
                         end
                         RemovePed(NpcData.Npc)
                         resetNpcTask()
-                        route = route + 1
+                        nextStop()
                         TriggerEvent('qb-busjob:client:DoBusNpc')
                         exports["qb-core"]:HideText()
                         PolyZone:destroy()
