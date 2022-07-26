@@ -42,9 +42,9 @@ end
 local function updateBlip()
     if PlayerData.job.name == "bus" then
         busBlip = AddBlipForCoord(Config.Location)
-        SetBlipSprite (busBlip, 513)
+        SetBlipSprite(busBlip, 513)
         SetBlipDisplay(busBlip, 4)
-        SetBlipScale  (busBlip, 0.6)
+        SetBlipScale(busBlip, 0.6)
         SetBlipAsShortRange(busBlip, true)
         SetBlipColour(busBlip, 49)
         BeginTextCommandSetBlipName("STRING")
@@ -54,8 +54,6 @@ local function updateBlip()
         RemoveBlip(busBlip)
     end
 end
-
-
 
 local function whitelistedVehicle()
     local ped = PlayerPedId()
@@ -94,9 +92,10 @@ local function GetDeliveryLocation()
     SetBlipRouteColour(NpcData.DeliveryBlip, 3)
     NpcData.LastDeliver = route
     local inRange = false
-    local PolyZone = CircleZone:Create(vector3(Config.NPCLocations.Locations[route].x, Config.NPCLocations.Locations[route].y, Config.NPCLocations.Locations[route].z), 5, {
-        name="busjobdeliver",
-        useZ=true,
+    local PolyZone = CircleZone:Create(vector3(Config.NPCLocations.Locations[route].x,
+        Config.NPCLocations.Locations[route].y, Config.NPCLocations.Locations[route].z), 5, {
+        name = "busjobdeliver",
+        useZ = true,
         -- debugPoly=true
     })
     PolyZone:onPlayerInOut(function(isPointInside)
@@ -153,7 +152,7 @@ local function busGarage()
         }
     }
     for _, v in pairs(Config.AllowedVehicles) do
-        vehicleMenu[#vehicleMenu+1] = {
+        vehicleMenu[#vehicleMenu + 1] = {
             header = v.label,
             params = {
                 event = "qb-busjob:client:TakeVehicle",
@@ -163,7 +162,7 @@ local function busGarage()
             }
         }
     end
-    vehicleMenu[#vehicleMenu+1] = {
+    vehicleMenu[#vehicleMenu + 1] = {
         header = Lang:t('menu.bus_close'),
         params = {
             event = "qb-menu:client:closeMenu"
@@ -174,23 +173,23 @@ end
 
 RegisterNetEvent("qb-busjob:client:TakeVehicle", function(data)
     local coords = Config.Location
-    if(BusData.Active) then
+    if (BusData.Active) then
         QBCore.Functions.Notify(Lang:t('error.one_bus_active'), 'error')
         return
     else
-    QBCore.Functions.SpawnVehicle(data.model, function(veh)
-        SetVehicleNumberPlateText(veh, Lang:t('info.bus_plate')..tostring(math.random(1000, 9999)))
-        exports['LegacyFuel']:SetFuel(veh, 100.0)
-        closeMenuFull()
-        TaskWarpPedIntoVehicle(PlayerPedId(), veh, -1)
-        TriggerEvent("vehiclekeys:client:SetOwner", QBCore.Functions.GetPlate(veh))
-        SetVehicleEngineOn(veh, true, true)
-    end, coords, true)
-    Wait(1000)
-    TriggerEvent('qb-busjob:client:DoBusNpc')
+        QBCore.Functions.TriggerCallback('QBCore:Server:SpawnVehicle', function(netId)
+            local veh = NetToVeh(netId)
+            SetVehicleNumberPlateText(veh, Lang:t('info.bus_plate') .. tostring(math.random(1000, 9999)))
+            exports['LegacyFuel']:SetFuel(veh, 100.0)
+            closeMenuFull()
+            TaskWarpPedIntoVehicle(PlayerPedId(), veh, -1)
+            TriggerEvent("vehiclekeys:client:SetOwner", QBCore.Functions.GetPlate(veh))
+            SetVehicleEngineOn(veh, true, true)
+        end, data.model, coords, true)
+        Wait(1000)
+        TriggerEvent('qb-busjob:client:DoBusNpc')
     end
 end)
-
 
 -- Events
 AddEventHandler('onResourceStart', function(resourceName)
@@ -198,7 +197,7 @@ AddEventHandler('onResourceStart', function(resourceName)
     if GetCurrentResourceName() == resourceName then
         updateBlip()
     end
-  end)
+end)
 
 RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
     PlayerData = QBCore.Functions.GetPlayerData()
@@ -239,9 +238,10 @@ RegisterNetEvent('qb-busjob:client:DoBusNpc', function()
             NpcData.LastNpc = route
             NpcData.Active = true
             local inRange = false
-            local PolyZone = CircleZone:Create(vector3(Config.NPCLocations.Locations[route].x, Config.NPCLocations.Locations[route].y, Config.NPCLocations.Locations[route].z), 5, {
-                name="busjobdeliver",
-                useZ=true,
+            local PolyZone = CircleZone:Create(vector3(Config.NPCLocations.Locations[route].x,
+                Config.NPCLocations.Locations[route].y, Config.NPCLocations.Locations[route].z), 5, {
+                name = "busjobdeliver",
+                useZ = true,
                 -- debugPoly=true
             })
             PolyZone:onPlayerInOut(function(isPointInside)
@@ -256,7 +256,7 @@ RegisterNetEvent('qb-busjob:client:DoBusNpc', function()
                                 local veh = GetVehiclePedIsIn(ped, 0)
                                 local maxSeats, freeSeat = GetVehicleMaxNumberOfPassengers(veh)
 
-                                for i=maxSeats - 1, 0, -1 do
+                                for i = maxSeats - 1, 0, -1 do
                                     if IsVehicleSeatFree(veh, i) then
                                         freeSeat = i
                                         break
@@ -296,9 +296,9 @@ end)
 CreateThread(function()
     local inRange = false
     local PolyZone = CircleZone:Create(vector3(Config.Location.x, Config.Location.y, Config.Location.z), 5, {
-        name="busMain",
-        useZ=true,
-        debugPoly=false
+        name = "busMain",
+        useZ = true,
+        debugPoly = false
     })
     PolyZone:onPlayerInOut(function(isPointInside)
         local inVeh = whitelistedVehicle()
