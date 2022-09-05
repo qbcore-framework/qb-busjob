@@ -272,7 +272,7 @@ RegisterNetEvent('qb-busjob:client:DoBusNpc', function()
                                 end
                                 GetDeliveryLocation()
                                 NpcData.NpcTaken = true
-                                TriggerServerEvent('qb-busjob:server:NpcPay', math.random(15, 25))
+                                TriggerServerEvent('qb-busjob:server:NpcPay')
                                 exports["qb-core"]:HideText()
                                 PolyZone:destroy()
                                 break
