@@ -40,7 +40,7 @@ end
 local function whitelistedVehicle()
     local lPed = PlayerPedId()
     local vehicle = GetVehiclePedIsIn(lPed)
-    local vehlist = {}
+    local vehlist
     if QBCore.Shared.QBJobsStatus then
         local data = exports['qb-jobs']:AddJobs()
         vehlist = data[PlayerJob.name].Vehicles
@@ -290,7 +290,6 @@ end)
 if QBCore.Shared.QBJobsStatus and PlayerJob.name == "bus" then
     CreateThread(function()
         local inRange = false
-        local data = exports['qb-jobs']:AddJobs()
         local PolyZone = CircleZone:Create(vector3(Config.Location.x, Config.Location.y, Config.Location.z), 5, {
             name = "busMain",
             useZ = true,
