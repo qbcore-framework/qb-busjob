@@ -4,7 +4,7 @@ Config.AllowedVehicles = {
     [1] = {model = "bus", label = Lang:t('info.bus')},
 }
 
-Config.Location = vector4(462.22, -641.15, 28.45, 175.0)
+Config.Location = vector4(461.43, -648.1, 28.21, 169.29)
 
 Config.NPCLocations = {
     Locations = {
