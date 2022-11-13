@@ -1,11 +1,5 @@
 Config = Config or {}
-
-Config.AllowedVehicles = {
-    [1] = {model = "bus", label = Lang:t('info.bus')},
-}
-
 Config.Location = vector4(461.43, -648.1, 28.21, 169.29)
-
 Config.NPCLocations = {
     Locations = {
         vector4(304.36, -764.56, 29.31, 252.09),
@@ -15,7 +9,6 @@ Config.NPCLocations = {
         vector4(-250.14, -886.78, 30.63, 8.67),
     }
 }
-
 Config.NpcSkins = {
     [1] = {
         'a_f_m_skidrow_01',
@@ -161,4 +154,8 @@ Config.NpcSkins = {
         'a_m_m_prolhost_01',
         'a_m_m_rurmeth_01',
     }
+}
+-- Deprecated Tables
+Config.AllowedVehicles = {
+    ["bus"] = {label = Lang:t('info.bus')},
 }

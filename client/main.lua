@@ -6,7 +6,6 @@ local route = 1
 local max = #Config.NPCLocations.Locations
 local busBlip = nil
 local ready = true
-
 local NpcData = {
     Active = false,
     CurrentNpc = nil,
@@ -20,11 +19,9 @@ local NpcData = {
     NpcDelivered = false,
     CountDown = 180
 }
-
 local BusData = {
     Active = false,
 }
-
 -- Functions
 local function resetNpcTask()
     NpcData = {
@@ -40,44 +37,27 @@ local function resetNpcTask()
         NpcDelivered = false,
     }
 end
-
-local function updateBlip()
-    if QBCore.Shared.QBJobsStatus then return end
-    if PlayerData.job.name == "bus" then
-        busBlip = AddBlipForCoord(Config.Location)
-        SetBlipSprite(busBlip, 513)
-        SetBlipDisplay(busBlip, 4)
-        SetBlipScale(busBlip, 0.6)
-        SetBlipAsShortRange(busBlip, true)
-        SetBlipColour(busBlip, 49)
-        BeginTextCommandSetBlipName("STRING")
-        AddTextComponentSubstringPlayerName(Lang:t('info.bus_depot'))
-        EndTextCommandSetBlipName(busBlip)
-    elseif busBlip ~= nil then
-        RemoveBlip(busBlip)
-    end
-end
-
 local function whitelistedVehicle()
     local lPed = PlayerPedId()
     local vehicle = GetVehiclePedIsIn(lPed)
+    local vehlist = {}
     if QBCore.Shared.QBJobsStatus then
         local data = exports['qb-jobs']:AddJobs()
-        if PlayerJob.name == "bus" then
-            for _,v in pairs(data[PlayerJob.name].Vehicles) do
-                for k1,v1 in pairs(v) do
-                    if IsVehicleModel(vehicle, GetHashKey(k1)) then
-                        return IsVehicleModel(vehicle, GetHashKey(k1))
-                    end
+        vehlist = data[PlayerJob.name].Vehicles
+    else
+        vehlist = Config.AllowedVehicles
+    end
+    if PlayerJob.name == "bus" then
+        for _,v in pairs(vehlist) do
+            for k1 in pairs(v) do
+                if IsVehicleModel(vehicle, GetHashKey(k1)) then
+                    return IsVehicleModel(vehicle, GetHashKey(k1))
                 end
             end
         end
-    else
-        return IsVehicleModel(vehicle, GetHashKey(Config.PoliceHelicopter))
     end
     return false
 end
-
 local function nextStop()
     if route <= (max - 1) then
         route = route + 1
@@ -85,7 +65,6 @@ local function nextStop()
         route = 1
     end
 end
-
 local function GetDeliveryLocation()
     nextStop()
     if NpcData.DeliveryBlip ~= nil then
@@ -143,13 +122,27 @@ local function GetDeliveryLocation()
         end
     end)
 end
-
+-- Deprecated Functions due to qb-jobs
+local function updateBlip()
+    if QBCore.Shared.QBJobsStatus then return end
+    if PlayerData.job.name == "bus" then
+        busBlip = AddBlipForCoord(Config.Location)
+        SetBlipSprite(busBlip, 513)
+        SetBlipDisplay(busBlip, 4)
+        SetBlipScale(busBlip, 0.6)
+        SetBlipAsShortRange(busBlip, true)
+        SetBlipColour(busBlip, 49)
+        BeginTextCommandSetBlipName("STRING")
+        AddTextComponentSubstringPlayerName(Lang:t('info.bus_depot'))
+        EndTextCommandSetBlipName(busBlip)
+    elseif busBlip ~= nil then
+        RemoveBlip(busBlip)
+    end
+end
 local function closeMenuFull()
     if QBCore.Shared.QBJobsStatus then return end
     exports['qb-menu']:closeMenu()
 end
-
--- Old Menu Code (being removed)
 local function busGarage()
     if QBCore.Shared.QBJobsStatus then return end
     local vehicleMenu = {
@@ -177,7 +170,6 @@ local function busGarage()
     }
     exports['qb-menu']:openMenu(vehicleMenu)
 end
-
 RegisterNetEvent("qb-busjob:client:TakeVehicle", function(data)
     if QBCore.Shared.QBJobsStatus then return end
     local coords = Config.Location
@@ -198,7 +190,6 @@ RegisterNetEvent("qb-busjob:client:TakeVehicle", function(data)
         TriggerEvent('qb-busjob:client:DoBusNpc')
     end
 end)
-
 -- Events
 AddEventHandler('onResourceStart', function(resourceName)
     -- handles script restarts
@@ -206,22 +197,18 @@ AddEventHandler('onResourceStart', function(resourceName)
         updateBlip()
     end
 end)
-
 RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
     PlayerData = QBCore.Functions.GetPlayerData()
     PlayerJob = PlayerData.job
     updateBlip()
 end)
-
 RegisterNetEvent('QBCore:Client:OnPlayerUnload', function()
     PlayerData = {}
 end)
-
 RegisterNetEvent('QBCore:Client:OnJobUpdate', function(JobInfo)
     PlayerData.job = JobInfo
     updateBlip()
 end)
-
 RegisterNetEvent('qb-busjob:client:DoBusNpc', function()
     if whitelistedVehicle() then
         if not NpcData.Active then
@@ -299,7 +286,6 @@ RegisterNetEvent('qb-busjob:client:DoBusNpc', function()
         QBCore.Functions.Notify(Lang:t('error.not_in_bus'), 'error')
     end
 end)
-
 -- Threads
 if QBCore.Shared.QBJobsStatus and PlayerJob.name == "bus" then
     CreateThread(function()

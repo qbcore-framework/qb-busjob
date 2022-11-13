@@ -1,5 +1,6 @@
+-- Variables
 local QBCore = exports['qb-core']:GetCoreObject()
-
+-- Functions
 function NearBus(src)
     local ped = GetPlayerPed(src)
     local coords = GetEntityCoords(ped)
@@ -10,7 +11,7 @@ function NearBus(src)
         end
     end
 end
-
+-- Events
 RegisterNetEvent('qb-busjob:server:NpcPay', function()
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
