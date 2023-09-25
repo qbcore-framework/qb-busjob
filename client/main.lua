@@ -61,12 +61,12 @@ local function whitelistedVehicle()
     local retval = false
 
     for i = 1, #Config.AllowedVehicles, 1 do
-        if veh == GetHashKey(Config.AllowedVehicles[i].model) then
+        if veh == Config.AllowedVehicles[i].model then
             retval = true
         end
     end
 
-    if veh == GetHashKey("dynasty") then
+    if veh == `dynasty` then
         retval = true
     end
 
@@ -219,7 +219,7 @@ RegisterNetEvent('qb-busjob:client:DoBusNpc', function()
         if not NpcData.Active then
             local Gender = math.random(1, #Config.NpcSkins)
             local PedSkin = math.random(1, #Config.NpcSkins[Gender])
-            local model = GetHashKey(Config.NpcSkins[Gender][PedSkin])
+            local model = Config.NpcSkins[Gender][PedSkin]
             RequestModel(model)
             while not HasModelLoaded(model) do
                 Wait(0)
