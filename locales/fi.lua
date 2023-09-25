@@ -3,7 +3,8 @@ local Translations = {
         already_driving_bus = 'Ajat jo bussia!',
         not_in_bus = 'Et ole bussissa!',
         one_bus_active = 'Sinulla voi olla vain yksi aktiivinen bussi kerrallaan',
-        drop_off_passengers = 'Jätä matkustajat pysäkille ennen kun lopetat työskentelyn'
+        drop_off_passengers = 'Jätä matkustajat pysäkille ennen kun lopetat työskentelyn',
+        exploit = "Attempting To Exploit"
     },
     success = {
         dropped_off = 'Matkustaja jätetty pysäkille!',

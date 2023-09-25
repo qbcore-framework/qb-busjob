@@ -3,7 +3,8 @@ local Translations = {
         already_driving_bus = 'Zaten otobüs kullanıyorsun',
         not_in_bus = 'Otobüste değilsin',
         one_bus_active = 'Aynı anda yalnızca bir aktif otobüsünüz olabilir',
-        drop_off_passengers = 'Çalışmayı bırakmadan önce yolcuları bırakın'
+        drop_off_passengers = 'Çalışmayı bırakmadan önce yolcuları bırakın',
+        exploit = "Attempting To Exploit"
     },
     success = {
         dropped_off = 'Kişi bırakıldı',

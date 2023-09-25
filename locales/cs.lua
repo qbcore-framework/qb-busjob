@@ -3,7 +3,8 @@ local Translations = {
         already_driving_bus = 'Již řídíš autobus',
         not_in_bus = 'Nejsi v autobuse',
         one_bus_active = 'V jednu chvíli můžete mít pouze jeden aktivní autobus',
-        drop_off_passengers = 'Než přestanete pracovat, vysaďte všechny cestující'
+        drop_off_passengers = 'Než přestanete pracovat, vysaďte všechny cestující',
+        exploit = "Attempting To Exploit"
     },
     success = {
         dropped_off = 'Osoba byla vysazena',
