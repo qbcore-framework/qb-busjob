@@ -3,7 +3,8 @@ local Translations = {
         already_driving_bus = 'უკვე ატარებ ავტობუსს',
         not_in_bus = 'შენ არ იმყოფები ავტობუსში',
         one_bus_active = 'შეგიძლია გყავდეს მხოლოდ ერთი აქტიური ავტობუსი',
-        drop_off_passengers = 'ჩამოსვი ყველა მგზავრი სანამ დაასრულებ მუშაობას'
+        drop_off_passengers = 'ჩამოსვი ყველა მგზავრი სანამ დაასრულებ მუშაობას',
+        exploit = "Attempting To Exploit"
     },
     success = {
         dropped_off = 'მგზავრი ჩავიდა',

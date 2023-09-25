@@ -3,7 +3,8 @@ local Translations = {
         already_driving_bus = 'Du kører allerede en bus',
         not_in_bus = 'Du er ikke i en bus',
         one_bus_active = 'Du kan kun have én aktiv bus ad gangen',
-        drop_off_passengers = 'Smid passagererne af, før du holder op med at arbejde'
+        drop_off_passengers = 'Smid passagererne af, før du holder op med at arbejde',
+        exploit = "Attempting To Exploit"
     },
     success = {
         dropped_off = 'Person blev sat af',

@@ -3,7 +3,8 @@ local Translations = {
         already_driving_bus = 'Du fährst bereits einen Bus',
         not_in_bus = 'Du bist in keinem Bus',
         one_bus_active = 'Du kannst nur ein Bus nutzen',
-        drop_off_passengers = 'Setz die Passagiere ab, bevor du mit der Arbeit aufhörst'
+        drop_off_passengers = 'Setz die Passagiere ab, bevor du mit der Arbeit aufhörst',
+        exploit = "Attempting To Exploit"
     },
     success = {
         dropped_off = 'Peson(en) wurde(n) abgesetzt',

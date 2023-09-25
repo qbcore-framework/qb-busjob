@@ -3,7 +3,8 @@ local Translations = {
         already_driving_bus = 'Já estás a conduzir um autocarro',
         not_in_bus = 'Não estás num autocarro',
         one_bus_active = 'Só podes ter um autocarro ativo ao mesmo tempo',
-        drop_off_passengers = 'Deixa os passageiros antes de parares de trabalhar'
+        drop_off_passengers = 'Deixa os passageiros antes de parares de trabalhar',
+        exploit = "Tentando explorar algum bug"
     },
     success = {
         dropped_off = 'Deixaste o passageiro',

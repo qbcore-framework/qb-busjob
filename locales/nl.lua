@@ -3,7 +3,8 @@ local Translations = {
         already_driving_bus = 'Je rijdt al in een bus',
         not_in_bus = 'Je zit niet in een bus',
         one_bus_active = 'Je kunt maar één actieve bus tegelijk hebben',
-        drop_off_passengers = 'Zet de passagiers af voordat je stopt met werken'
+        drop_off_passengers = 'Zet de passagiers af voordat je stopt met werken',
+        exploit = "Attempting To Exploit"
     },
     success = {
         dropped_off = 'Persoon is afgezet',
