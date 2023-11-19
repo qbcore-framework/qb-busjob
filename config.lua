@@ -4,6 +4,10 @@ Config.AllowedVehicles = {
     [1] = {model = `bus`, label = Lang:t('info.bus')},
 }
 
+Config.Jobname = 'bus'
+
+Config.Management = false -- if true, the money gained from the trips, will go to the boss menu funds
+
 Config.Location = vector4(462.22, -641.15, 28.45, 175.0)
 
 Config.NPCLocations = {
