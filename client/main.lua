@@ -1,9 +1,9 @@
 -- Variables
 local QBCore = exports['qb-core']:GetCoreObject()
-local PlayerData = QBCore.Functions.GetPlayerData()
 local route = 1
 local max = #Config.NPCLocations.Locations
 local busBlip = nil
+local playerJob = {}
 
 local NpcData = {
     Active = false,
@@ -23,6 +23,39 @@ local BusData = {
     Active = false,
 }
 
+
+local function updateBlip()
+    if playerJob.name == Config.Jobname then
+        busBlip = AddBlipForCoord(Config.Location)
+        SetBlipSprite(busBlip, 513)
+        SetBlipDisplay(busBlip, 4)
+        SetBlipScale(busBlip, 0.6)
+        SetBlipAsShortRange(busBlip, true)
+        SetBlipColour(busBlip, 49)
+        BeginTextCommandSetBlipName("STRING")
+        AddTextComponentSubstringPlayerName(Lang:t('info.bus_depot'))
+        EndTextCommandSetBlipName(busBlip)
+    elseif busBlip ~= nil then
+        RemoveBlip(busBlip)
+    end
+end
+
+-- Events
+AddEventHandler('onResourceStart', function(resourceName)
+    playerJob = QBCore.Functions.GetPlayerData().job
+    updateBlip()
+end)
+
+RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
+    playerJob = QBCore.Functions.GetPlayerData().job
+    updateBlip()
+end)
+
+RegisterNetEvent('QBCore:Client:OnJobUpdate', function(JobInfo)
+    playerJob = JobInfo
+    updateBlip()
+end)
+
 -- Functions
 local function resetNpcTask()
     NpcData = {
@@ -37,22 +70,6 @@ local function resetNpcTask()
         NpcTaken = false,
         NpcDelivered = false,
     }
-end
-
-local function updateBlip()
-    if PlayerData.job.name == "bus" then
-        busBlip = AddBlipForCoord(Config.Location)
-        SetBlipSprite(busBlip, 513)
-        SetBlipDisplay(busBlip, 4)
-        SetBlipScale(busBlip, 0.6)
-        SetBlipAsShortRange(busBlip, true)
-        SetBlipColour(busBlip, 49)
-        BeginTextCommandSetBlipName("STRING")
-        AddTextComponentSubstringPlayerName(Lang:t('info.bus_depot'))
-        EndTextCommandSetBlipName(busBlip)
-    elseif busBlip ~= nil then
-        RemoveBlip(busBlip)
-    end
 end
 
 local function whitelistedVehicle()
@@ -180,7 +197,7 @@ RegisterNetEvent("qb-busjob:client:TakeVehicle", function(data)
         QBCore.Functions.TriggerCallback('QBCore:Server:SpawnVehicle', function(netId)
             local veh = NetToVeh(netId)
             SetVehicleNumberPlateText(veh, Lang:t('info.bus_plate') .. tostring(math.random(1000, 9999)))
-            exports['LegacyFuel']:SetFuel(veh, 100.0)
+            exports['qb-sna-fuel']:SetFuel(veh, 100.0)
             closeMenuFull()
             TaskWarpPedIntoVehicle(PlayerPedId(), veh, -1)
             TriggerEvent("vehiclekeys:client:SetOwner", QBCore.Functions.GetPlate(veh))
@@ -189,29 +206,6 @@ RegisterNetEvent("qb-busjob:client:TakeVehicle", function(data)
         Wait(1000)
         TriggerEvent('qb-busjob:client:DoBusNpc')
     end
-end)
-
--- Events
-AddEventHandler('onResourceStart', function(resourceName)
-    -- handles script restarts
-    if GetCurrentResourceName() == resourceName then
-        updateBlip()
-    end
-end)
-
-RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
-    PlayerData = QBCore.Functions.GetPlayerData()
-    updateBlip()
-end)
-
-RegisterNetEvent('QBCore:Client:OnPlayerUnload', function()
-    PlayerData = {}
-end)
-
-RegisterNetEvent('QBCore:Client:OnJobUpdate', function(JobInfo)
-    PlayerData.job = JobInfo
-    updateBlip()
-
 end)
 
 RegisterNetEvent('qb-busjob:client:DoBusNpc', function()
@@ -302,7 +296,7 @@ CreateThread(function()
     })
     PolyZone:onPlayerInOut(function(isPointInside)
         local inVeh = whitelistedVehicle()
-        if PlayerData.job.name == "bus" then
+        if playerJob.name == Config.Jobname then
             if isPointInside then
                 inRange = true
                 CreateThread(function()
