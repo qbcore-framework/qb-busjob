@@ -27,8 +27,8 @@ RegisterNetEvent('qb-busjob:server:NpcPay', function()
             end
             local chance = math.random(1, 1000)
             if chance < 10 then
-                Player.Functions.AddItem("cryptostick", 1, false)
-                TriggerClientEvent('inventory:client:ItemBox', src, QBCore.Shared.Items["cryptostick"], "add")
+                Player.Functions.AddItem(Config.item, 1, false)
+                TriggerClientEvent('inventory:client:ItemBox', src, QBCore.Shared.Items[Config.item], "add")
             end
         else
             DropPlayer(src, Lang:t('error.exploit'))
