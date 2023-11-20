@@ -41,7 +41,7 @@ local function updateBlip()
 end
 
 -- Events
-AddEventHandler('onResourceStart', function(resourceName)
+AddEventHandler('onResourceStart', function()
     playerJob = QBCore.Functions.GetPlayerData().job
     updateBlip()
 end)
