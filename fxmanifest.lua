@@ -1,7 +1,8 @@
 fx_version 'cerulean'
 game 'gta5'
-
-description 'QB-BusJob'
+lua54 'yes'
+author 'Kakarot'
+description 'Allows players to work as a bus driver and pickup npcs around the map'
 version '1.2.0'
 
 shared_scripts {
@@ -21,5 +22,3 @@ client_scripts {
 }
 
 server_script 'server/main.lua'
-
-lua54 'yes'
