@@ -1,5 +1,5 @@
 -- Variables
-local QBCore = exports['qb-core']:GetCoreObject()
+local QBCore = exports['qb-core']:GetCoreObject({ 'Functions' })
 local PlayerData = QBCore.Functions.GetPlayerData()
 local route = 1
 local max = #Config.NPCLocations.Locations
@@ -208,10 +208,16 @@ RegisterNetEvent('QBCore:Client:OnPlayerUnload', function()
     PlayerData = {}
 end)
 
-RegisterNetEvent('QBCore:Client:OnJobUpdate', function(JobInfo)
-    PlayerData.job = JobInfo
-    updateBlip()
-
+RegisterNetEvent('QBCore:Client:OnPlayerUpdated', function(key, val)
+    if key == 'job' then
+        local JobInfo = val
+        PlayerData.job = JobInfo
+        updateBlip()
+    elseif key == 'all' then
+        local JobInfo = val.job
+        PlayerData.job = JobInfo
+        updateBlip()
+    end
 end)
 
 RegisterNetEvent('qb-busjob:client:DoBusNpc', function()
