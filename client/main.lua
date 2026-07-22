@@ -40,7 +40,7 @@ local function resetNpcTask()
 end
 
 local function updateBlip()
-    if PlayerData.job.name == "bus" then
+    if PlayerData?.job?.name == "bus" then
         busBlip = AddBlipForCoord(Config.Location)
         SetBlipSprite(busBlip, 513)
         SetBlipDisplay(busBlip, 4)
